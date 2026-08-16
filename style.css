@@ -169,7 +169,8 @@
   .action-row{display:flex; gap:10px; margin-top:16px;}
 
   /* Stats */
-  .stat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px;}
+  .stat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:20px;}
+  @media (max-width:420px){ .stat-grid{grid-template-columns:repeat(2,1fr);} }
   .stat-card{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px 10px; text-align:center;}
   .stat-card .num{font-size:24px; font-weight:800;}
   .stat-card .lbl{font-size:11px; color:var(--muted); margin-top:2px;}
@@ -253,3 +254,59 @@
 
   /* Pose icon svg lines share color via inline style */
   .pose-icon{width:100%; height:100%; display:block;}
+
+  /* Today card */
+  .today-card{
+    background:linear-gradient(135deg, var(--surface-2), var(--surface)); border:1px solid var(--line);
+    border-radius:14px; padding:14px 16px; margin-bottom:16px;
+  }
+  .today-label{font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-bottom:6px; font-weight:700;}
+  .today-main{display:flex; justify-content:space-between; align-items:center; gap:10px;}
+  .today-name{font-size:16px; font-weight:700;}
+
+  /* Detail muscles */
+  .detail-muscles{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px;}
+  .muscle-tag{
+    background:var(--surface-2); border:1px solid var(--line); color:var(--muted);
+    font-size:11.5px; padding:4px 9px; border-radius:100px;
+  }
+
+  /* Plan tab */
+  .plan-day-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:12px 0; border-bottom:1px solid var(--line);
+  }
+  .plan-day-row .dname{font-size:14px; font-weight:600; width:90px; flex-shrink:0;}
+  .plan-day-row select{
+    flex:1; background:var(--surface-2); border:1px solid var(--line); border-radius:8px;
+    padding:9px 10px; color:var(--text); font-family:inherit; font-size:13px;
+  }
+  .reminder-box{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px;}
+  .reminder-row{display:flex; justify-content:space-between; align-items:flex-start; gap:14px;}
+  .reminder-title{font-size:14.5px; font-weight:700; margin-bottom:4px;}
+  .reminder-note{font-size:12px; color:var(--muted); line-height:1.5;}
+  .switch{position:relative; display:inline-block; width:46px; height:26px; flex-shrink:0;}
+  .switch input{opacity:0; width:0; height:0;}
+  .switch-track{
+    position:absolute; cursor:pointer; inset:0; background:var(--surface-2); border:1px solid var(--line);
+    border-radius:100px; transition:.2s;
+  }
+  .switch-track:before{
+    content:''; position:absolute; height:18px; width:18px; left:3px; top:3px; background:var(--muted);
+    border-radius:50%; transition:.2s;
+  }
+  .switch input:checked + .switch-track{background:var(--green); border-color:var(--green);}
+  .switch input:checked + .switch-track:before{transform:translateX(20px); background:var(--bg);}
+
+  /* Motivation banner */
+  .motivation-banner{
+    background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--orange);
+    border-radius:10px; padding:12px 14px; font-size:13.5px; color:var(--text); margin-bottom:16px; line-height:1.5;
+  }
+
+  /* Evolution list */
+  .evolution-item{
+    display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:13px;
+  }
+  .evolution-item .edate{color:var(--muted);}
+  .evolution-item .evals{color:var(--text); font-weight:600; text-align:right;}
