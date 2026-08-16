@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BARRA — Entrenamiento de calistenia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <svg class="bar-icon" viewBox="0 0 34 34" fill="none">
+      <circle cx="6" cy="17" r="4" fill="var(--red)"/>
+      <rect x="9" y="15" width="16" height="4" rx="2" fill="var(--text)"/>
+      <circle cx="28" cy="17" r="4" fill="var(--blue)"/>
+    </svg>
+    <div>
+      <h1 class="display">BARRA</h1>
+      <div class="tagline">Tu entrenamiento de calistenia y street workout</div>
+    </div>
+  </div>
+  <button class="profile-btn" id="btn-open-profile" title="Mi perfil">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+  </button>
+</header>
+
+<main>
+
+  <!-- ============ VISTA: RUTINAS ============ -->
+  <div class="view active" id="view-rutinas">
+    <div class="chips" id="chips"></div>
+    <div class="section-title">Sesiones</div>
+    <div id="routine-list"></div>
+    <button class="btn btn-ghost btn-block" id="btn-new-routine" style="margin-top:6px;">+ Crear sesión personalizada</button>
+  </div>
+
+  <!-- ============ VISTA: ENTRENAR ============ -->
+  <div class="view" id="view-entrenar">
+    <div id="entrenar-empty" class="empty">
+      Elige una sesión en la pestaña Rutinas y pulsa <b>Empezar</b> para entrenar aquí.
+    </div>
+    <div id="entrenar-active" style="display:none;">
+      <div class="session-header">
+        <div class="name" id="sess-routine-name">—</div>
+        <div class="name mono" id="sess-exercise-count">—</div>
+      </div>
+      <div class="progress-track" id="progress-track"></div>
+
+      <div class="exercise-hero">
+        <div class="pose-icon-wrap" id="ex-icon-wrap"></div>
+        <div class="exname-row">
+          <div class="exname" id="ex-name">—</div>
+          <button class="info-btn" id="btn-ex-info">i</button>
+        </div>
+        <div class="extarget" id="ex-target">—</div>
+      </div>
+
+      <div class="set-label" style="text-align:center;">Repeticiones completadas · serie <span id="set-current">1</span></div>
+      <div class="setrow">
+        <button class="stepbtn" id="rep-minus">−</button>
+        <div class="repcount mono" id="rep-count">0</div>
+        <button class="stepbtn" id="rep-plus">+</button>
+      </div>
+
+      <div class="rest-panel" id="rest-panel" style="display:none;">
+        <div class="label">Descanso</div>
+        <div class="clock mono" id="rest-clock">0:60</div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn btn-ghost" id="btn-skip-rest" style="display:none;">Saltar descanso</button>
+        <button class="btn btn-primary btn-block btn-lg" id="btn-log-set">Registrar serie</button>
+      </div>
+      <button class="btn btn-ghost btn-block" id="btn-end-session" style="margin-top:10px;">Terminar sesión</button>
+    </div>
+  </div>
+
+  <!-- ============ VISTA: PROGRESO ============ -->
+  <div class="view" id="view-progreso">
+    <div class="profile-summary" id="profile-summary" style="display:none;">
+      <div class="psline" id="profile-summary-text"></div>
+      <button class="btn btn-ghost" id="btn-edit-profile-2">Editar</button>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="num mono" id="stat-total">0</div><div class="lbl">Sesiones</div></div>
+      <div class="stat-card"><div class="num mono" id="stat-week">0</div><div class="lbl">Esta semana</div></div>
+      <div class="stat-card"><div class="num mono" id="stat-streak">0</div><div class="lbl">Racha (días)</div></div>
+    </div>
+    <div class="section-title">Series últimos 7 días</div>
+    <div class="chart" id="chart"></div>
+    <div class="section-title">Historial</div>
+    <div id="history-list"></div>
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<!-- Modal: nueva sesión personalizada -->
+<div class="modal-back" id="modal-back">
+  <div class="modal">
+    <h3>Nueva sesión</h3>
+    <div class="field">
+      <label>Nombre de la sesión</label>
+      <input type="text" id="nr-name" placeholder="Ej. Empuje matutino">
+    </div>
+    <div class="field">
+      <label>Categoría</label>
+      <select id="nr-cat"></select>
+    </div>
+    <div class="field">
+      <label>Ejercicios (elige de tu biblioteca, separados por coma)</label>
+      <input type="text" id="nr-exercises" placeholder="Ej. Flexiones, Dominadas, Fondos">
+    </div>
+    <div class="action-row">
+      <button class="btn btn-ghost btn-block" id="nr-cancel">Cancelar</button>
+      <button class="btn btn-primary btn-block" id="nr-save">Guardar sesión</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: ficha de ejercicio -->
+<div class="modal-back" id="detail-back">
+  <div class="modal">
+    <div class="detail-icon-wrap" id="detail-icon"></div>
+    <span class="detail-cat-tag" id="detail-cat">—</span>
+    <h3 id="detail-name">—</h3>
+    <div class="detail-desc" id="detail-desc">—</div>
+    <div class="detail-cues-title">Cómo hacerlo</div>
+    <ul class="detail-cues" id="detail-cues"></ul>
+    <button class="btn btn-ghost btn-block" id="detail-close" style="margin-top:18px;">Cerrar</button>
+  </div>
+</div>
+
+<!-- Modal / pantalla: perfil (onboarding y edición) -->
+<div class="onboard-view" id="onboard-view">
+  <div class="onboard-inner">
+    <h2 id="onboard-title">Antes de empezar</h2>
+    <div class="sub" id="onboard-sub">Cuéntanos un poco sobre ti para adaptar mejor tus sesiones. Estos datos se guardan solo en este dispositivo.</div>
+
+    <div class="field">
+      <label>Nivel en calistenia</label>
+      <select id="pf-level">
+        <option value="principiante">Principiante</option>
+        <option value="intermedio">Intermedio</option>
+        <option value="avanzado">Avanzado</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Sexo</label>
+      <select id="pf-sex">
+        <option value="hombre">Hombre</option>
+        <option value="mujer">Mujer</option>
+        <option value="prefiero-no-decir">Prefiero no decirlo</option>
+      </select>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Edad</label>
+        <input type="number" id="pf-age" placeholder="Años" min="10" max="99">
+      </div>
+      <div class="field">
+        <label>Altura (cm)</label>
+        <input type="number" id="pf-height" placeholder="cm" min="120" max="230">
+      </div>
+      <div class="field">
+        <label>Peso (kg)</label>
+        <input type="number" id="pf-weight" placeholder="kg" min="30" max="200">
+      </div>
+    </div>
+    <div class="field">
+      <label>Estado físico de partida</label>
+      <select id="pf-fitness">
+        <option value="sedentario">Sedentario (poco o ningún ejercicio)</option>
+        <option value="activo">Activo moderado (ejercicio ocasional)</option>
+        <option value="entrenado">Entrenado (ejercicio regular)</option>
+      </select>
+    </div>
+
+    <div class="action-row">
+      <button class="btn btn-ghost btn-block" id="pf-skip">Ahora no</button>
+      <button class="btn btn-primary btn-block" id="pf-save">Guardar perfil</button>
+    </div>
+  </div>
+</div>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-view="rutinas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="10" width="18" height="4" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg>
+    Rutinas
+  </button>
+  <button class="tab-btn" data-view="entrenar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    Entrenar
+  </button>
+  <button class="tab-btn" data-view="progreso">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V9M12 19V5M20 19v-7"/></svg>
+    Progreso
+  </button>
+</nav>
+
+<script src="script.js"></script>
+</body>
+</html>
